@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as http from 'http';
+import { WebSocketServer } from 'ws';
+import { handleMessage } from './handleMessage';
 
 export const httpServer = http.createServer(function (req, res) {
     const __dirname = path.resolve(path.dirname(''));
@@ -14,4 +16,18 @@ export const httpServer = http.createServer(function (req, res) {
         res.writeHead(200);
         res.end(data);
     });
+});
+
+const wsServer: WebSocketServer = new WebSocketServer({
+    port: 8080,
+  });
+
+wsServer.on('connection', (ws) => {
+    ws.on('message', (message: Buffer) => {
+        handleMessage(message.toString(), ws)
+    });
+    handleMessage('', ws);
+});
+wsServer.on('close', () => {
+    console.log('exit server');
 });
