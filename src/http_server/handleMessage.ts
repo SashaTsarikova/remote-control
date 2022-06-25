@@ -3,8 +3,6 @@ import * as robot from 'robotjs';
 import drawRect from "./helpers/drawRect";
 import drawCircle from "./helpers/drawCircle";
 import { handlePrntScrn } from "./helpers/handlePrntScrn";
-import Jimp from 'jimp/es';
-import * as jimp from'jimp';
 
 export function handleMessage(cmd: string, ws: WebSocket): void {
   const [command, px, height] = cmd.split(' ');
@@ -32,15 +30,15 @@ export function handleMessage(cmd: string, ws: WebSocket): void {
       break;
     case 'draw_circle':
       drawCircle(x, y, Number(px));
-      ws.send(`draw_circle`);
+      ws.send(`draw_circle \0`);
       break;
     case 'draw_rectangle':
       drawRect(x, y, Number(height), Number(px),);
-      ws.send(`draw_rectangle`);
+      ws.send(`draw_rectangle \0`);
       break;
     case 'draw_square':
       drawRect(x, y, Number(px), Number(px));
-      ws.send(`draw_square`);
+      ws.send(`draw_square \0`);
       break;
     case 'prnt_scrn':
       const size = 100;
@@ -50,7 +48,7 @@ export function handleMessage(cmd: string, ws: WebSocket): void {
       })
       break;
     default:
-      ws.send(`mouse_position ${x},${y} \0`);
+      ws.send(`unexpected command \0`);
       break;
     }
 }

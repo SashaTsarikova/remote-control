@@ -4,6 +4,8 @@ import * as http from 'http';
 import { WebSocketServer } from 'ws';
 import { handleMessage } from './handleMessage';
 
+const PORT = 8080;
+
 export const httpServer = http.createServer(function (req, res) {
     const __dirname = path.resolve(path.dirname(''));
     const file_path = __dirname + (req.url === '/' ? '/front/index.html' : '/front' + req.url);
@@ -19,14 +21,14 @@ export const httpServer = http.createServer(function (req, res) {
 });
 
 const wsServer: WebSocketServer = new WebSocketServer({
-    port: 8080,
+    port: PORT,
   });
 
 wsServer.on('connection', (ws) => {
+    console.log(`\x1b[33mWs server is running on port ${PORT}\x1b[33m`);
     ws.on('message', (message: Buffer) => {
         handleMessage(message.toString(), ws)
     });
-    handleMessage('', ws);
 });
 wsServer.on('close', () => {
     console.log('exit server');
