@@ -29,6 +29,9 @@ wsServer.on('connection', (ws) => {
     ws.on('message', (message: Buffer) => {
         handleMessage(message.toString(), ws)
     });
+    ws.on('close', () => {
+        console.log('connection is closed');
+    });
 });
 wsServer.on('close', () => {
     console.log('exit server');
